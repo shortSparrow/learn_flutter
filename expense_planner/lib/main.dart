@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'models/transaction.dart';
 import './widgets/chart.dart';
@@ -20,6 +19,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key});
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -89,6 +90,58 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _buildAdaptiveAppBar() {
+    const title = Text('Flutter App');
+    if (Platform.isIOS) {
+      return CupertinoNavigationBar(
+        middle: title,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              child: const Icon(CupertinoIcons.add),
+              onTap: () => _startAddNewTransaction(context),
+            )
+          ],
+        ),
+      );
+    }
+    return AppBar(
+      title: title,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        )
+      ],
+    );
+  }
+
+  List<Widget> _buildLandscapeContent(Widget transactionList) {
+    return [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          "Show Chart",
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        Switch.adaptive(
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            })
+      ]),
+      _showChart
+          ? Chart(recentTransactions: _recentTransactions)
+          : transactionList
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(Widget transactionList) {
+    return [Chart(recentTransactions: _recentTransactions), transactionList];
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLandscapeMode =
@@ -97,61 +150,23 @@ class _MyHomePageState extends State<MyHomePage> {
     final transactionList = TransactionList(
         transactions: _userTransaction, deleteTransaction: _deleteTransaction);
 
-    final appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text('Flutter App'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  child: Icon(CupertinoIcons.add),
-                  onTap: () => _startAddNewTransaction(context),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text('Flutter App'),
-            actions: [
-              IconButton(
-                  onPressed: () => _startAddNewTransaction(context),
-                  icon: Icon(Icons.add))
-            ],
-          );
-
     final pageBody = SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (isLandscapeMode)
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                "Show Chart",
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              Switch.adaptive(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  })
-            ]),
-          if (!isLandscapeMode) Chart(recentTransactions: _recentTransactions),
-          if (!isLandscapeMode) transactionList,
-          if (isLandscapeMode)
-            _showChart
-                ? Chart(recentTransactions: _recentTransactions)
-                : transactionList
+          if (isLandscapeMode) ..._buildLandscapeContent(transactionList),
+          if (!isLandscapeMode) ..._buildPortraitContent(transactionList),
         ],
       ),
     );
 
+    final appBar = _buildAdaptiveAppBar();
+
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            child: pageBody,
             navigationBar: appBar as ObstructingPreferredSizeWidget,
+            child: pageBody,
           )
         : Scaffold(
             appBar: appBar as PreferredSizeWidget,
@@ -162,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Container()
                 : FloatingActionButton(
                     onPressed: () => _startAddNewTransaction(context),
-                    child: Icon(Icons.add),
+                    child: const Icon(Icons.add),
                   ),
           );
   }

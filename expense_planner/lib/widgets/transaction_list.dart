@@ -1,5 +1,5 @@
+import 'package:expense_planner/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
@@ -20,8 +20,8 @@ class TransactionList extends StatelessWidget {
                     "no transactions added yed",
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
-                  SizedBox(height: 10),
-                  Container(
+                  const SizedBox(height: 10),
+                  SizedBox(
                     height: builder.maxHeight * 0.6,
                     child: Image.asset(
                       'assets/images/no_transaction.png',
@@ -35,42 +35,11 @@ class TransactionList extends StatelessWidget {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: transactions.length,
-              itemBuilder: (context, index) => Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                    elevation: 2,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        child: Padding(
-                          padding: EdgeInsets.all(6),
-                          child: FittedBox(
-                            child: Text('\$${transactions[index].amount}'),
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        transactions[index].title,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      subtitle: Text(
-                        DateFormat.yMMMd().format(transactions[index].date),
-                      ),
-                      trailing: MediaQuery.of(context).size.width > 460
-                          ? TextButton.icon(
-                              onPressed: () =>
-                                  deleteTransaction(transactions[index].id),
-                              icon: Icon(Icons.delete),
-                              style: TextButton.styleFrom(foregroundColor: Theme.of(context).errorColor),
-                              label: Text('delete'),
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () =>
-                                  deleteTransaction(transactions[index].id),
-                              color: Theme.of(context).errorColor,
-                            ),
-                    ),
-                  )),
+              itemBuilder: (context, index) => TransactionItem(
+                  transaction: transactions[index],
+                  deleteTransaction: deleteTransaction),
+            ),
     );
   }
 }
+
