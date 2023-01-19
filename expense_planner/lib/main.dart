@@ -54,9 +54,28 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+// with WidgetsBindingObserver - this is mixin (we get sone third methods without extending class)
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _userTransaction = [];
   bool _showChart = false;
+
+@override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
+  }
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   List<Transaction> get _recentTransactions {
     return _userTransaction

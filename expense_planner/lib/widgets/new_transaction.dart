@@ -5,16 +5,50 @@ class NewTransaction extends StatefulWidget {
   final Function(String title, double amount, DateTime selectedDate)
       addNewTransaction;
 
-  NewTransaction({super.key, required this.addNewTransaction});
+  NewTransaction({super.key, required this.addNewTransaction}) {
+    print("Constructor NewTransaction");
+  }
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  State<NewTransaction> createState() {
+    print("createState NewTransaction");
+    return _NewTransactionState();
+  }
 }
 
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
+
+  _NewTransactionState() {
+    print("Constructor _NewTransactionState");
+  }
+
+  @override
+  void initState() {
+    print("initState");
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant NewTransaction oldWidget) {
+    print("didUpdateWidget");
+    super.didUpdateWidget(oldWidget);
+  }
+
+  // Out of video
+  @override
+  void didChangeDependencies() {
+    print("didChangeDependencies");
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    print("dispose");
+    super.dispose();
+  }
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
@@ -62,7 +96,7 @@ class _NewTransactionState extends State<NewTransaction> {
       child: Card(
         elevation: 5,
         child: Container(
-          padding:  EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: 10,
             top: 10,
             right: 10,
@@ -80,19 +114,19 @@ class _NewTransactionState extends State<NewTransaction> {
                   controller: _amountController,
                   keyboardType: TextInputType.number,
                   onSubmitted: (_) => _submitData()),
-              Container(
+              SizedBox(
                 height: 70,
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
                         selectedDateText,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     TextButton(
                       onPressed: _presentDatePicker,
-                      child: Text("Choose date"),
+                      child: const Text("Choose date"),
                     )
                   ],
                 ),
