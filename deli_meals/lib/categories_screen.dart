@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import './dummy_data.dart';
 
 class CategoriesScreen extends StatelessWidget {
+  static const routeName = '/';
+
   const CategoriesScreen({super.key});
 
   @override
@@ -18,8 +20,11 @@ class CategoriesScreen extends StatelessWidget {
           mainAxisSpacing: 20,
         ),
         children: DUMMY_CATEGORIES
-            .map((category) =>
-                CategoryItem(title: category.title, color: category.color))
+            .map((category) => CategoryItem(
+                  title: category.title,
+                  color: category.color,
+                  id: category.id,
+                ))
             .toList(),
       ),
     );
