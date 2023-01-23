@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import '../dummy_data.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  static const routeName = '/';
-
   const CategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("DeliMeals")),
+      // appBar: AppBar(title: const Text("DeliMeals")),
       body: GridView(
         padding: const EdgeInsets.all(25),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
