@@ -1,8 +1,9 @@
-import 'dart:ui';
-
-import 'package:deli_meals/categories_screen.dart';
-import 'package:deli_meals/category_meals_screen.dart';
 import 'package:flutter/material.dart';
+
+import './screens/categories_screen.dart';
+import './screens/category_meals_screen.dart';
+import './screens/meal_details_screen.dart';
+import './screens/unknown_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,11 +30,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.pink)
             .copyWith(secondary: Colors.amber),
       ),
-      
       routes: {
-        CategoriesScreen.routeName: (context) =>  CategoriesScreen(),
+        CategoriesScreen.routeName: (context) => CategoriesScreen(),
         CategoryMealsScreen.routeName: (context) => CategoryMealsScreen(),
+        MealDetailsScreen.routeName: (context) => MealDetailsScreen(),
       },
+      onGenerateRoute: (settings) =>
+          MaterialPageRoute(builder: (context) => UnknownScreen()),
     );
   }
 }
