@@ -1,10 +1,14 @@
 import 'package:deli_meals/dummy_data.dart';
-import 'package:deli_meals/helpers/scroll_without_glow.dart';
+import 'package:deli_meals/widgets/scroll_without_glow.dart';
 import 'package:flutter/material.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   static const String routeName = '/meal-details';
-  const MealDetailsScreen({super.key});
+  final Function(String mealId) toggleFavorite;
+  final Function(String mealId) isMealFavorite;
+
+  const MealDetailsScreen(
+      {super.key, required this.toggleFavorite, required this.isMealFavorite});
 
   Widget _buildSectionTitle(String title, BuildContext context) => Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -85,6 +89,12 @@ class MealDetailsScreen extends StatelessWidget {
             ))
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(isMealFavorite(mealId) ? Icons.star : Icons.star_border),
+        onPressed: () => toggleFavorite(mealId),
+        // onPressed: () => Navigator.of(context).pop(mealId),
+        // pass data which I get on MealItem in then on Navigator
       ),
     );
   }
