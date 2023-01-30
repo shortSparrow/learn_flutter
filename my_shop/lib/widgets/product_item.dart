@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
+
 import 'package:my_shop/providers/product.dart';
 import 'package:my_shop/screens/product_details_screen.dart';
 
@@ -11,6 +13,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // One load data and display it. But wrapper leading in Consumer, so that part id dynamic. We can change data, but it don't have any impact on other part of this widget (nor rebuild)
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -34,7 +37,9 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             icon: const Icon(Icons.shopping_cart),
             color: Theme.of(context).colorScheme.secondary,
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product.id, product.price, product.title);
+            },
           ),
         ),
         child: GestureDetector(
