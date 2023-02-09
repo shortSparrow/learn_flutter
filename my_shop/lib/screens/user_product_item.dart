@@ -18,10 +18,11 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
-      trailing: Container(
+      trailing: SizedBox(
         width: 100,
         child: Row(
           children: [
@@ -37,7 +38,18 @@ class UserProductItem extends StatelessWidget {
               icon: const Icon(Icons.delete),
               onPressed: () {
                 Provider.of<ProductProvider>(context, listen: false)
-                    .deleteProduct(id);
+                    .deleteProduct(id)
+                    .catchError((exception) {
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        exception.toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                });
               },
               color: Theme.of(context).colorScheme.error,
             ),

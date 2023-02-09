@@ -11,6 +11,10 @@ class UserProductsScreen extends StatelessWidget {
 
   const UserProductsScreen({super.key});
 
+  Future<void> _refreshProducts(BuildContext context) async {
+    await Provider.of<ProductProvider>(context, listen: false).fetchAndSetProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<ProductProvider>(context);
@@ -20,26 +24,29 @@ class UserProductsScreen extends StatelessWidget {
         title: const Text('Your products'),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context)
-                .pushNamed(EditProductScreen.routeName),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(EditProductScreen.routeName),
             icon: const Icon(Icons.add),
           )
         ],
       ),
       drawer: const AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: products.items.length,
-          itemBuilder: (context, i) => Column(
-            children: [
-              UserProductItem(
-                id: products.items[i].id,
-                title: products.items[i].title,
-                imageUrl: products.items[i].imageUrl,
-              ),
-              const Divider(),
-            ],
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProducts(context),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ListView.builder(
+            itemCount: products.items.length,
+            itemBuilder: (context, i) => Column(
+              children: [
+                UserProductItem(
+                  id: products.items[i].id,
+                  title: products.items[i].title,
+                  imageUrl: products.items[i].imageUrl,
+                ),
+                const Divider(),
+              ],
+            ),
           ),
         ),
       ),

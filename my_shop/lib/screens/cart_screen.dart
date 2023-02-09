@@ -9,18 +9,9 @@ class CartScreen extends StatelessWidget {
 
   const CartScreen({super.key});
 
-  void handleMakeOrder(CartProvider cart, OrderProvider order) {
-    order.addOrder(
-      cart.items.values.toList(),
-      cart.totalAmount,
-    );
-    cart.clear();
-  }
-
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-    final order = Provider.of<OrderProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,10 +38,7 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 8.0),
-                  TextButton(
-                    onPressed: () => handleMakeOrder(cart, order),
-                    child: const Text("ORDER NOW"),
-                  )
+                  MakeOrderButton(cart: cart)
                 ],
               ),
             ),
@@ -70,6 +58,54 @@ class CartScreen extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class MakeOrderButton extends StatefulWidget {
+  final CartProvider cart;
+
+  const MakeOrderButton({
+    super.key,
+    required this.cart,
+  });
+
+  @override
+  State<MakeOrderButton> createState() => _MakeOrderButtonState();
+}
+
+class _MakeOrderButtonState extends State<MakeOrderButton> {
+  var _isLoading = false;
+
+  void handleMakeOrder(CartProvider cart, OrderProvider order) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await order.addOrder(
+        cart.items.values.toList(),
+        cart.totalAmount,
+      );
+
+      cart.clear();
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final order = Provider.of<OrderProvider>(context, listen: false);
+
+    return TextButton(
+      onPressed: (widget.cart.totalAmount <= 0) || _isLoading
+          ? null
+          : () => handleMakeOrder(widget.cart, order),
+      child: _isLoading
+          ? const CircularProgressIndicator()
+          : const Text("ORDER NOW"),
     );
   }
 }
