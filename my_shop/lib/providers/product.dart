@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_shop/models/https_exception.dart';
+import 'package:my_shop/util/constants.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -26,17 +27,18 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleIsFavorite() async {
+  Future<void> toggleIsFavorite(String? token,String? userId) async {
     final oldIsFavorite = isFavorite;
     _setIsFavorite(!isFavorite);
 
     try {
-      final url = Uri.https('flutter-start-http-default-rtdb.firebaseio.com',
-          '/products/${this.id}.json');
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': isFavorite,
-          }));
+      final url = Uri.https(
+        BASE_URL,
+        '/userFavorites/$userId/${this.id}.json',
+        {'auth': token},
+      );
+      final response = await http.put(url,
+          body: json.encode(isFavorite));
       if (response.statusCode >= 400) {
         throw HttpException("Failed to change isFavorite");
       }

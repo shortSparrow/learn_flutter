@@ -3,12 +3,17 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_shop/models/https_exception.dart';
+import 'package:my_shop/util/constants.dart';
 
 import '../models/cart_item.dart';
 import '../models/order_item.dart';
 
 class OrderProvider with ChangeNotifier {
-  final List<Order> _orders = [];
+  List<Order> _orders = [];
+  final String? token;
+  final String? userId;
+
+  OrderProvider(this._orders, {this.token, this.userId});
 
   List<Order> get orders {
     return [..._orders];
@@ -17,7 +22,10 @@ class OrderProvider with ChangeNotifier {
   Future<void> fetchAndSetOrders() async {
     try {
       final url = Uri.https(
-          'flutter-start-http-default-rtdb.firebaseio.com', '/orders.json');
+        BASE_URL,
+        '/orders/$userId.json',
+        {'auth': token},
+      );
 
       final response = await http.get(url);
 
@@ -63,7 +71,10 @@ class OrderProvider with ChangeNotifier {
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     try {
       final url = Uri.https(
-          'flutter-start-http-default-rtdb.firebaseio.com', '/orders.json');
+        BASE_URL,
+        '/orders/$userId.json',
+        {'auth': token},
+      );
 
       final timestamp = DateTime.now();
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_shop/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
@@ -14,6 +15,7 @@ class ProductItem extends StatelessWidget {
     // One load data and display it. But wrapper leading in Consumer, so that part id dynamic. We can change data, but it don't have any impact on other part of this widget (nor rebuild)
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<CartProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -28,7 +30,7 @@ class ProductItem extends StatelessWidget {
                 ),
                 color: Theme.of(context).colorScheme.secondary,
                 onPressed: () {
-                  product.toggleIsFavorite();
+                  product.toggleIsFavorite(auth.token, auth.userId);
                 },
               );
             },
