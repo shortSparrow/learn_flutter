@@ -72,7 +72,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             onSelected: (value) => onSelected(value),
           ),
           Consumer<CartProvider>(
-            builder: (_, cart, child) => Badge(
+            builder: (_, cart, child) => MyBadge(
               value: cart.itemCount.toString(),
               child: child!,
             ),
