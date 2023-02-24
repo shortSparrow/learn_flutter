@@ -123,6 +123,6 @@ class AuthProvider with ChangeNotifier {
       return;
     }
     final timeToExpiry = _expiryTokeDate!.difference(DateTime.now()).inSeconds;
-    _authTimer = Timer(Duration(seconds: 20), logout);
+    _authTimer = Timer(const Duration(days: 20), logout);
   }
 }

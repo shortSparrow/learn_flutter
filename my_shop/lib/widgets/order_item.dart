@@ -38,32 +38,35 @@ class _OrderItemState extends State<OrderItem> {
               onPressed: toggleIsExpanded,
             ),
           ),
-          if (_isExpanded)
-            Container(
-              height: min(widget.orderItem.products.length * 20 + 20, 150),
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 4, bottom: 10),
-              child: ListView(
-                  children: widget.orderItem.products
-                      .map((product) => Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                product.title,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: _isExpanded
+                ? min(widget.orderItem.products.length * 20 + 20, 150)
+                : 0,
+            padding: const EdgeInsets.only(
+                left: 15, right: 15, top: 4, bottom: 10),
+            child: ListView(
+                children: widget.orderItem.products
+                    .map((product) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              product.title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Text(
-                                '${product.quantity}x \$${product.price}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              )
-                            ],
-                          ))
-                      .toList()),
-            )
+                            ),
+                            Text(
+                              '${product.quantity}x \$${product.price}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
+                            )
+                          ],
+                        ))
+                    .toList()),
+          )
         ],
       ),
     );

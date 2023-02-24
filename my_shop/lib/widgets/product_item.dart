@@ -41,10 +41,10 @@ class ProductItem extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
               cart.addItem(product.id, product.price, product.title);
-              
+
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
-                 SnackBar(
+                SnackBar(
                   content: const Text('added the item to cart'),
                   duration: const Duration(seconds: 2),
                   action: SnackBarAction(
@@ -59,7 +59,15 @@ class ProductItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () => Navigator.of(context)
               .pushNamed(ProductDetailsScreen.routeName, arguments: product.id),
-          child: Image.network(product.imageUrl, fit: BoxFit.cover),
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );
