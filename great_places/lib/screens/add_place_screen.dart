@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:great_places/providers/greate_places.dart';
+import 'package:great_places/providers/grate_places.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/image_input.dart';

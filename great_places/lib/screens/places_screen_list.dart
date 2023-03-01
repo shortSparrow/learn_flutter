@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:great_places/providers/greate_places.dart';
+import 'package:great_places/providers/grate_places.dart';
 import 'package:provider/provider.dart';
 
 import 'add_place_screen.dart';
@@ -21,25 +21,32 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GratePlaces>(
-        child: const Center(
-          child: Text('Got no places yet, start adding some'),
-        ),
-        builder: (context, greatPlaces, child) {
-          if (greatPlaces.items.isEmpty) {
-            return child ?? Container();
+      body: FutureBuilder(
+        future: Provider.of<GratePlaces>(context, listen: false)
+            .fetchAndSetPlaces(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
-          return ListView.builder(
-            itemCount: greatPlaces.items.length,
-            itemBuilder: (context, index) => ListTile(
-              leading: CircleAvatar(
-                backgroundImage: FileImage(greatPlaces.items[index].image),
-              ),
-              title: Text(greatPlaces.items[index].title),
-              onTap: () {
-                
-              },
+          return Consumer<GratePlaces>(
+            child: const Center(
+              child: Text('Got no places yet, start adding some'),
             ),
+            builder: (context, greatPlaces, child) {
+              if (greatPlaces.items.isEmpty) {
+                return child ?? Container();
+              }
+              return ListView.builder(
+                itemCount: greatPlaces.items.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: FileImage(greatPlaces.items[index].image),
+                  ),
+                  title: Text(greatPlaces.items[index].title),
+                  onTap: () {},
+                ),
+              );
+            },
           );
         },
       ),

@@ -60,6 +60,7 @@ class AuthProvider with ChangeNotifier {
       if (data['error'] != null) {
         throw HttpException(data['error']['message']);
       }
+      print(data);
       _token = data['idToken'];
       _userId = data['localId'];
       _expiryTokeDate =
