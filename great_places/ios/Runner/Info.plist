@@ -30,6 +30,12 @@
 	<string>А ну швидко надав мені доступ, вилупку!</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>да досуп до мікрофона, ну пазязя</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need your location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need your location</string>
+	<key>UIBackgroundModes</key>
+	<string>Need your location in background</string>
 
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

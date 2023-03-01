@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:great_places/providers/grate_places.dart';
+import 'package:great_places/widgets/location_input.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/image_input.dart';
@@ -42,7 +43,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         title: const Text('add new place'),
       ),
       body: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Text('User inputs'),
@@ -58,6 +58,8 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     ),
                     const SizedBox(height: 10.0),
                     ImageInput(onSelectImage: _selectImage),
+                    const SizedBox(height: 10),
+                     const LocationInput()
                   ],
                 ),
               ),
