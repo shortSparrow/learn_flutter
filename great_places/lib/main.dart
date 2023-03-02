@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:great_places/providers/grate_places.dart';
 import 'package:great_places/screens/places_screen_list.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 import 'navigation/onGenerateRoute.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  await FlutterConfig.loadEnvVariables();
+  
   runApp(const MyApp());
 }
 
