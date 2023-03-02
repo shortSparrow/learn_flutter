@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:great_places/providers/grate_places.dart';
+import 'package:great_places/screens/place_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'add_place_screen.dart';
 
 class PlacesListScreen extends StatelessWidget {
   const PlacesListScreen({super.key});
+
+  void _navigateToDetailScreen(BuildContext context, id) {
+    Navigator.of(context).pushNamed(PlaceDetailScreen.routeName,
+        arguments: PlaceDetailScreenArguments(id: id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class PlacesListScreen extends StatelessWidget {
         future: Provider.of<GratePlaces>(context, listen: false)
             .fetchAndSetPlaces(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           return Consumer<GratePlaces>(
@@ -43,7 +49,10 @@ class PlacesListScreen extends StatelessWidget {
                     backgroundImage: FileImage(greatPlaces.items[index].image),
                   ),
                   title: Text(greatPlaces.items[index].title),
-                  onTap: () {},
+                  subtitle:
+                      Text(greatPlaces.items[index].location.address ?? ''),
+                  onTap: () => _navigateToDetailScreen(
+                      context, greatPlaces.items[index].id),
                 ),
               );
             },

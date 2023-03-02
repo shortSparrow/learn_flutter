@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:great_places/models/place_location.dart';
 import 'package:great_places/providers/grate_places.dart';
 import 'package:great_places/widgets/location_input.dart';
 import 'package:provider/provider.dart';
@@ -19,19 +20,27 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _pickedImage;
+  PlaceLocation? _placeLocation;
 
   void _selectImage(File pickedImage) {
     _pickedImage = pickedImage;
   }
 
+  void selectPlace({required double lat, required double lng}) {
+    _placeLocation = PlaceLocation(latitude: lat, longitude: lng);
+  }
+
   void _savePlace() {
-    if (_titleController.text.isEmpty || _pickedImage == null) {
+    if (_titleController.text.isEmpty ||
+        _pickedImage == null ||
+        _placeLocation == null) {
       return;
     }
 
     Provider.of<GratePlaces>(context, listen: false).addPlace(
-      _titleController.text,
-      _pickedImage!,
+      title: _titleController.text,
+      image: _pickedImage!,
+      location: _placeLocation!,
     );
     Navigator.of(context).pop();
   }
@@ -45,7 +54,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('User inputs'),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -59,7 +67,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     const SizedBox(height: 10.0),
                     ImageInput(onSelectImage: _selectImage),
                     const SizedBox(height: 10),
-                     const LocationInput()
+                    LocationInput(selectPlace: selectPlace)
                   ],
                 ),
               ),

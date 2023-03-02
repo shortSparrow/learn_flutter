@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:great_places/helpers/location_helper.dart';
+import 'package:great_places/screens/map_screen.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  final Function({required double lat, required double lng}) selectPlace;
+
+  const LocationInput({super.key, required this.selectPlace});
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -12,15 +16,10 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   String? _previewImageUrl;
 
-  Future<void> _getUserLocation() async {
-    final locationData = await Location().getLocation();
-    if (locationData.latitude == null || locationData.longitude == null) {
-      return;
-    }
-
+  void _showPreview({required double lat, required double lng}) {
     final previewUrl = LocationHelper.generateLocationPreviewImage(
-      latitude: locationData.latitude!,
-      longitude: locationData.longitude!,
+      latitude: lat,
+      longitude: lng,
     );
 
     setState(() {
@@ -28,20 +27,56 @@ class _LocationInputState extends State<LocationInput> {
     });
   }
 
+  Future<void> _getUserLocation() async {
+    try {
+      final locationData = await Location().getLocation();
+      if (locationData.latitude == null || locationData.longitude == null) {
+        return;
+      }
+      _showPreview(lat: locationData.latitude!, lng: locationData.longitude!);
+      widget.selectPlace(
+        lat: locationData.latitude!,
+        lng: locationData.longitude!,
+      );
+    } catch (e) {
+      print("Failed tp get user LocationL $e");
+    }
+  }
+
+  Future<void> _selectOnMap() async {
+    final selectedLocation = await Navigator.of(context).pushNamed(
+      MapScreen.routeName,
+      arguments: MapScreenArguments(isSelecting: true),
+    ) as LatLng?;
+
+    if (selectedLocation == null) {
+      return;
+    }
+
+    _showPreview(
+      lat: selectedLocation.latitude,
+      lng: selectedLocation.longitude,
+    );
+    widget.selectPlace(
+      lat: selectedLocation.latitude,
+      lng: selectedLocation.longitude,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          height: 270,
+          height: 170,
           width: double.infinity,
           alignment: _previewImageUrl == null ? Alignment.center : null,
           decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.grey,
-              ),
-              color: Colors.green),
+            border: Border.all(
+              width: 1,
+              color: Colors.grey,
+            ),
+          ),
           child: _previewImageUrl == null
               ? const Text(
                   "No location choose",
@@ -63,7 +98,7 @@ class _LocationInputState extends State<LocationInput> {
             ),
             const SizedBox(width: 20),
             OutlinedButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: const Icon(Icons.map),
               label: const Text('Select on map'),
             ),

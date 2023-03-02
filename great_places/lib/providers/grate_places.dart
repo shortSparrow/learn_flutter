@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:great_places/helpers/db_helper.dart';
+import 'package:great_places/helpers/location_helper.dart';
 import 'package:great_places/models/place.dart';
+import 'package:great_places/models/place_location.dart';
 
 class GratePlaces with ChangeNotifier {
   List<Place> _items = [];
@@ -11,12 +13,31 @@ class GratePlaces with ChangeNotifier {
     return [..._items];
   }
 
-  void addPlace(String title, File image) {
+  Place findById(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
+
+  Future<void> addPlace({
+    required String title,
+    required File image,
+    required PlaceLocation location,
+  }) async {
+    final address = await LocationHelper.getPlaceAddress(
+      lat: location.latitude.toString(),
+      lng: location.longitude.toString(),
+    );
+
+    final updatedLocation = PlaceLocation(
+      latitude: location.latitude,
+      longitude: location.longitude,
+      address: address,
+    );
+
     final newPlace = Place(
       id: DateTime.now().toIso8601String(),
       title: title,
       image: image,
-      location: null,
+      location: updatedLocation,
     );
 
     _items.add(newPlace);
@@ -25,6 +46,9 @@ class GratePlaces with ChangeNotifier {
       'id': newPlace.id,
       'title': newPlace.title,
       'image': newPlace.image.path,
+      'loc_lat': updatedLocation.latitude,
+      'loc_lng': updatedLocation.longitude,
+      'address': updatedLocation.address ?? '',
     });
   }
 
@@ -35,7 +59,11 @@ class GratePlaces with ChangeNotifier {
               id: item['id'],
               title: item['title'],
               image: File(item['image']),
-              location: null,
+              location: PlaceLocation(
+                latitude: item['loc_lat'],
+                longitude: item['loc_lng'],
+                address: item['address'],
+              ),
             ))
         .toList();
     notifyListeners();
