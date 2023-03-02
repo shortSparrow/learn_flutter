@@ -23,8 +23,8 @@ class GratePlaces with ChangeNotifier {
     required PlaceLocation location,
   }) async {
     final address = await LocationHelper.getPlaceAddress(
-      lat: location.latitude.toString(),
-      lng: location.longitude.toString(),
+      lat: location.latitude,
+      lng: location.longitude,
     );
 
     final updatedLocation = PlaceLocation(
