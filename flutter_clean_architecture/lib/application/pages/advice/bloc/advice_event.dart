@@ -1,9 +1,9 @@
-part of 'advice_bloc.dart';
+// part of 'advice_bloc.dart';
 
-@immutable
-abstract class AdviceEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+// @immutable
+// abstract class AdviceEvent extends Equatable {
+//   @override
+//   List<Object?> get props => [];
+// }
 
-class AdviceRequestEvent extends AdviceEvent {}
+// class AdviceRequestEvent extends AdviceEvent {}

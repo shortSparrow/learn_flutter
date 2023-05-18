@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/application/core/services/theme_service.dart';
-import 'package:flutter_clean_architecture/application/pages/advice/bloc/advice_bloc.dart';
+import 'package:flutter_clean_architecture/application/pages/advice/cubit/advice_cubit.dart';
 import 'package:flutter_clean_architecture/application/pages/advice/widgets/advice_field.dart';
 import 'package:flutter_clean_architecture/application/pages/advice/widgets/custom_button.dart';
 import 'package:flutter_clean_architecture/application/pages/advice/widgets/error_message.dart';
@@ -13,7 +13,7 @@ class AdvicePageWrapperProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AdviceBloc(),
+      create: (context) => AdviceCubit(),
       child: const AdvicePage(),
     );
   }
@@ -47,7 +47,7 @@ class AdvicePage extends StatelessWidget {
             children: [
               Expanded(
                 child: Center(
-                  child: BlocBuilder<AdviceBloc, AdviceState>(
+                  child: BlocBuilder<AdviceCubit, AdviceCubitState>(
                     builder: (context, state) {
                       switch (state.runtimeType) {
                         case AdviceInitial:
