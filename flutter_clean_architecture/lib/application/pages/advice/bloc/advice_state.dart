@@ -14,7 +14,7 @@ class AdviceStateLoaded extends AdviceState {
 }
 
 class AdviceStateError extends AdviceState {
-  final String advice;
+  final String errorMessage;
 
-  AdviceStateError({required this.advice});
+  AdviceStateError({required this.errorMessage});
 }
