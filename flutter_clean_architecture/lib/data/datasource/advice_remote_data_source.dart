@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_clean_architecture/data/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/advice_model.dart';
@@ -22,6 +23,10 @@ class AdviceRemoteDataSourceImpl implements AdviceRemoteDataSource {
         "content-type": "application/json; charset=utf-8"
       },
     );
+
+    if(response.statusCode != 200) {
+      throw ServerException();
+    }
 
     final responseBody = json.decode(response.body);
 
