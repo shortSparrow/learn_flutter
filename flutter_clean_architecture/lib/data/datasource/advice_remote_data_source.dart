@@ -13,18 +13,18 @@ abstract class AdviceRemoteDataSource {
 }
 
 class AdviceRemoteDataSourceImpl implements AdviceRemoteDataSource {
-  final client = http.Client();
+  AdviceRemoteDataSourceImpl({required this.client});
+
+  final http.Client client;
 
   @override
   Future<AdviceModel> getRandomAdviceFromApi() async {
     final response = await client.get(
       Uri.parse("https://api.flutter-community.de/api/v1/advice"),
-      headers: {
-        "content-type": "application/json; charset=utf-8"
-      },
+      headers: {"content-type": "application/json; charset=utf-8"},
     );
 
-    if(response.statusCode != 200) {
+    if (response.statusCode != 200) {
       throw ServerException();
     }
 

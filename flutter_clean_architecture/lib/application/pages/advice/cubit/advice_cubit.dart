@@ -9,10 +9,10 @@ const serverFailureMessage = "oops, API error, please try again";
 const cacheFailureMessage = "oops, cache failed, please try again";
 const generalFailureMessage = "oops, something went wrong, please try again";
 
-
 class AdviceCubit extends Cubit<AdviceCubitState> {
-  AdviceCubit() : super(AdviceInitial());
-  final AdviceUseCase adviceUseCase = AdviceUseCase();
+  AdviceCubit({required this.adviceUseCase}) : super(AdviceInitial());
+
+  final AdviceUseCase adviceUseCase;
 
   void adviceRequest() async {
     emit(AdviceStateLoading());

@@ -7,13 +7,15 @@ import 'package:flutter_clean_architecture/application/pages/advice/widgets/cust
 import 'package:flutter_clean_architecture/application/pages/advice/widgets/error_message.dart';
 import 'package:provider/provider.dart';
 
+import '../../../injection.dart';
+
 class AdvicePageWrapperProvider extends StatelessWidget {
   const AdvicePageWrapperProvider({super.key});
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AdviceCubit(),
+      create: (context) => sl<AdviceCubit>(),
       child: const AdvicePage(),
     );
   }
