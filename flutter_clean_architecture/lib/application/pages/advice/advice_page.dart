@@ -12,7 +12,7 @@ import '../../../injection.dart';
 class AdvicePageWrapperProvider extends StatelessWidget {
   const AdvicePageWrapperProvider({super.key});
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<AdviceCubit>(),
@@ -101,10 +101,15 @@ class AdvicePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 200,
                 child: Center(
-                  child: CustomButton(),
+                  child: CustomButton(
+                    onTap: () {
+                      // BlocProvider.of<AdviceBloc>(context).add(AdviceRequestEvent()),
+                      BlocProvider.of<AdviceCubit>(context).adviceRequest();
+                    },
+                  ),
                 ),
               ),
             ],
